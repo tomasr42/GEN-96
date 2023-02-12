@@ -17,8 +17,23 @@ See the related repo "playbooks" and ``ansible-playbook -i inventory/inv_st depl
 Note that it takes _this_ repo as parameters for where to find getTransferRequest.js
 
 # INVESTIGATION
-This is what a transcode looks like 
 
+**Test item**
+
+https://studio-staging7.mam.beeldengeluid.nl/studio/#ItemPlace:2102302010095588721
+
+**Forcing a transfer**
+
+transfermgr copy min 2102302010707274408 stg central-hr-1
+
+**Making an import**
+
+armedia@st-hr-bng-01:~ # cd /ardome/media/imp/museum-nobrowsegen-imp/
+armedia@st-hr-bng-01:/ardome/media/imp/museum-nobrowsegen-imp # cp MUSEUMTESTER_MUS1000AA07.mxf MUSEUMTESTER_MUS1000AA20.mxf
+
+**This is what a transcode looks like with normal browsegen**
+
+``` xml
 IMPORTD-234031.337-230206-55096-INFO: Transfer Reroute: Got Payload<?xml version="1.0" encoding="UTF-8"?>
 <atom:entry xmlns:atom="http://www.w3.org/2005/Atom" xmlns:core="http://ns.vizrt.com/ardome/core" xmlns:server="http://ns.vizrt.com/ardome/server" xmlns:storage="http://ns.vizrt.com/ardome/storage" xmlns:transcoder="http://ns.vizrt.com/ardome/transcoder" xmlns:transfer="http://ns.vizrt.com/ardome/transfer">
   <atom:title>Untitled</atom:title>
@@ -48,3 +63,32 @@ IMPORTD-234031.337-230206-55096-INFO: Transfer Reroute: Got Payload<?xml version
     "transcoderProfile":"coder"},
     "version":1}</transfer:auxData>
 </atom:entry>
+```
+
+**This is what a transfer looks like from transfermgr copy**
+
+```xml
+INFO: Transfer Reroute: Got Payload<?xml version="1.0" encoding="UTF-8"?>
+<atom:entry xmlns:atom="http://www.w3.org/2005/Atom" xmlns:core="http://ns.vizrt.com/ardome/core" xmlns:transfer="http://ns.vizrt.com/ardome/transfer">
+  <atom:title>Untitled</atom:title>
+  <transfer:source>
+    <atom:link rel="min" type="application/atom+xml;type=entry" href="https://studio-staging7.mam.beeldengeluid.nl/api/media/min/2102302010707274408"/>
+    <core:ardomeIdentity name="min">2102302010707274408</core:ardomeIdentity>
+  </transfer:source>
+  <transfer:destination>
+    <atom:link rel="storage" type="application/atom+xml;type=entry" href="https://studio-staging7.mam.beeldengeluid.nl/api/storage/25"/>
+    <core:uniqueNumber name="storage">25</core:uniqueNumber>
+  </transfer:destination>
+  <transfer:options/>
+</atom:entry>
+```
+
+So I want to hijack the transfer and rip out these two:
+```xml
+    <transcoder:profileName>coder</transcoder:profileName>
+    <transcoder:cluster>import</transcoder:cluster>
+```
+and this one, for good measure
+```xml
+  <transfer:auxData>...
+```

@@ -14,7 +14,7 @@ function getTransferRequest(js, xfr) {
     // alert ("Transfer Reroute: Source is not null!");
     
     /*  Museum block START */
-    var options = payload.getOptions();a
+    var options = payload.getOptions();
     if (typeof options === 'undefined') {
         alert ("Transfer Reroute: No options");
     } else {
@@ -28,7 +28,7 @@ function getTransferRequest(js, xfr) {
     if (!mobID) { return xfr; }
     // alert ("Transfer Reroute: Got Mob ID: " + mobID);
 
-    destination = payload.getDestination();
+    var destination = payload.getDestination();
     // alert ("Transfer Reroute: Got destination: " + destination + " and it is not null");
     if (!destination) { return xfr; }
     // alert ("Transfer Reroute: Destination is not null");

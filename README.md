@@ -6,6 +6,7 @@ Museum tenancy MP4 files crash during browsegen. The plan is to make getTransfer
 
 # DESCRIPTION
 Development is in VS Code. 
+compile using ``tsc getTransferRequest.ts``
 
 # OVERVIEW OF FILES
 getTransferRequest.js

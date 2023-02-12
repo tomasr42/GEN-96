@@ -10,19 +10,7 @@ function getTransferRequest(js, xfr) {
     var source = payload.getSource();
     // alert ("Transfer Reroute: Got Source: " + source);
     if (!source) { return xfr; }
-
     // alert ("Transfer Reroute: Source is not null!");
-    
-    /*  Museum block START */
-    var options = payload.getOptions();
-    if (typeof options === 'undefined') {
-        alert ("Transfer Reroute: No options");
-    } else {
-        alert ("Transfer Reroute: Got Options" + options.generateXML());
-        //alert ("Transfer Reroute:" + options.getTranscoderCluster());
-        alert ("Transfer Reroute:" + options.transcoderCluster);
-    } 
-    /* Museum block END */
 
     var mobID = source.getMob();
     if (!mobID) { return xfr; }
@@ -32,6 +20,7 @@ function getTransferRequest(js, xfr) {
     // alert ("Transfer Reroute: Got destination: " + destination + " and it is not null");
     if (!destination) { return xfr; }
     // alert ("Transfer Reroute: Destination is not null");
+    museumLogic(payload, mobID);
 
     // Fetch the storage handle to check where the tranfer is going to
     // Using handle because it is safer to check compared to the ID
@@ -41,7 +30,7 @@ function getTransferRequest(js, xfr) {
 
     var destinationStorage = getStorageById(storageCheck).getHandle();
     // alert ("Transfer Reroute: Got storage handle: " + destinationStorage);
-  	if (!destinationStorage) { return xfr; }
+    if (!destinationStorage) { return xfr; }
 	// alert ("Transfer Reroute: Destination storage is not null");
 
     // Need to make sure that the desitnation storage for the transfer is one of the portals
@@ -58,7 +47,7 @@ function getTransferRequest(js, xfr) {
         alert ("Transfer Reroute: Here is the initial payload!" + payload.generateXML());
         var mob = getMOBById(mobID);
         // alert ("Transfer Reroute: Checking if transfer is initated from safety storage");
-      	
+
       	// Load the all the MINs associated with the mobID into a MINQuery
         var sourceQuery = new MINQuery();
         sourceQuery.setParentMob(mobID);
@@ -70,7 +59,7 @@ function getTransferRequest(js, xfr) {
         // alert ("Transfer Reroute: Checking if transfer request needs to be rerouted.");
 
       	// Make sure none of the files in the transfers are coming from the wrong storage
-      	for (var i = 0; i < mins.length; i++) {
+        for (var i = 0; i < mins.length; i++) {
             if (getStorageById(mins[i].getStorage()).getHandle() == invalidSourceStorage) {
                 usingInvalidStorage = true;
                 break;
@@ -90,24 +79,24 @@ function getTransferRequest(js, xfr) {
         var minCollection = getMINs(minQuery);
         mins = minCollection.getEntries();
         var correctMob = null;
-     
+    
       	// Check what storage every min in the parent item are using
       	// Check if any are on the storage the transfer should use
-      	var targetStorage  = "img-objecten-arc";
+        var targetStorage  = "img-objecten-arc";
         for (var i = 0; i < mins.length; i++) {
             // Checking the storage handle because it's safer to do than checking the ID
             // alert ("Transfer Reroute: Checking storage of " + mins[i].getId());
             minStorage = getStorageById(mins[i].getStorage());
             minStorage = minStorage.getHandle()
-          	
-          	
+
+
             if (minStorage == targetStorage) {
                 //  alert ("Transfer Reroute: The MIN that should be used is: "+ mins[i].getId());
                 correctMob = mins[i].getParentMob();
                 break;
             }
         }
-      	
+
       	// If a min was und on the storage we want then we can reroute the transfer
         if (correctMob) {
             // Changing the source mob as it is what the transfer is using to know what should be transferred
@@ -122,6 +111,53 @@ function getTransferRequest(js, xfr) {
     alert ("Returning xfr");
     return xfr;
     alert ("Wait, we're not supposed to be here,something went REALLY wrong");
+}
+    
+function museumLogic(payload, mob_id) {
+    var mob, asset, asset_id, options, aux_data, metadata_obj, tape_group;
+
+    options = payload.getOptions();
+    if (typeof options === 'undefined') {
+        alert ("Transfer Reroute: No options");
+    } else {
+        alert ("Transfer Reroute: Got Options" + options.generateXML());
+        //alert ("Transfer Reroute:" + options.getTranscoderCluster());
+        alert ("Transfer Reroute:" + options.transcoderCluster);
+        //payload.setOptions(null);
+        //payload.setAuxData(null);
+    }
+    
+    aux_data = payload.getAuxData();
+    if (typeof aux_data === 'undefined') {
+        alert ("Transfer Reroute: No aux data");
+    } else {
+        alert ("Transfer Reroute: Got aux data" + aux_data.generateXML());
+    }
+
+    mob = getMOBById(mob_id);
+    asset_id = mob.getParentItem();
+    if (asset_id == null) {
+        return;
+    }
+    asset = getItemById(asset_id);
+    try {
+        metadata_obj = getItemMetadataById(asset_id);
+    } catch(e) {
+        alert("Error calling the getItemMetadataById:" + e);
+        return;
+    }
+
+    if(metadata_obj) {
+        tape_group = metadata_obj.getField('nisv.tapegroup').getValue();
+        if(tape_group && tape_group == 'BG_MUS_TAPE') {
+            alert("Found item having museum tape group:" + asset_id);
+        } else {
+            alert("Item didn't have museum tape group: " + asset_id);
+        }
+    } else {
+        alert("Item didn't have metadata, ignoring: " + asset_id);
+    }
+    return payload;
 }
 
 function shouldCalculateMd5Sum(js, xfr, item) {

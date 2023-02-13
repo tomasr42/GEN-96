@@ -2,10 +2,7 @@
 .vscode
 
 # JS code
-.js
-
-# Media
-.mp4
+*.js
 
 # temp files
 GMI/gmi/*.xml

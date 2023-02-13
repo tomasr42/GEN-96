@@ -6,3 +6,10 @@
 
 # Media
 .mp4
+
+# temp files
+GMI/gmi/*.xml
+GMI/gmi/*.xml.bak
+
+# Media files
+GMI/media/*.mp4

@@ -28,6 +28,9 @@
                     <gmi:Field name="asset.category">
                         <gmi:Dictionary>Digital</gmi:Dictionary>
                     </gmi:Field>
+                    <gmi:Field name="nisv.tapegroup">
+                        <gmi:Dictionary>MUS</gmi:Dictionary>
+                    </gmi:Field>
                 </gmi:Fields>
                 <gmi:GuciCreatorCode>MUS</gmi:GuciCreatorCode>
                 <gmi:GuciBasename>GMI_TEST</gmi:GuciBasename>

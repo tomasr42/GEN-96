@@ -20,7 +20,7 @@ function getTransferRequest(js, xfr) {
     // alert ("Transfer Reroute: Got destination: " + destination + " and it is not null");
     if (!destination) { return xfr; }
     // alert ("Transfer Reroute: Destination is not null");
-    museumLogic(payload, mobID);
+    museumLogic(payload, source, mobID);
 
     // Fetch the storage handle to check where the tranfer is going to
     // Using handle because it is safer to check compared to the ID
@@ -113,12 +113,13 @@ function getTransferRequest(js, xfr) {
     alert ("Wait, we're not supposed to be here,something went REALLY wrong");
 }
     
-function museumLogic(payload, mob_id) {
-    var mob, asset, asset_id, options, aux_data, metadata_obj, field, tape_group;
+function museumLogic(payload, source, mob_id) {
+    var mob, asset, asset_id, options, aux_data, metadata_obj, field, tape_group, storage, src_storage;
 
     options = payload.getOptions();
     if (typeof options === 'undefined') {
-        alert ("Transfer Reroute: No options");
+        alert ("Transfer Reroute: No xfer options. This is unlikely an import. Skipping museum tenancy logic");
+        return;
     } else {
         alert ("Transfer Reroute: Got Options" + options.generateXML());
         //alert ("Transfer Reroute:" + options.getTranscoderCluster());
@@ -133,7 +134,18 @@ function museumLogic(payload, mob_id) {
     } else {
         alert ("Transfer Reroute: Got aux data");
     }
+    
+    /* Verify that the source is really an import storage. Return if not */
+    storage = source.getStorage();
+    if (!storage) { return; }
 
+    src_storage = getStorageById(storage).getHandle();
+    if (!src_storage) { return; }
+
+    // Ugly, but they are the same on both prod and stage.
+    if (src_storage != "mayam-normal-imp" && src_storage != "mayam-prio-import") { return; }
+
+    /* Next, verify that the source item has DIVA tape group = MUS. Return if not */
     mob = getMOBById(mob_id);
     asset_id = mob.getParentItem();
     if (asset_id == null) {

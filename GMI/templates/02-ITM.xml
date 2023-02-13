@@ -1,0 +1,63 @@
+        </gmi:Fields>
+        <gmi:Items>
+            <gmi:Item form="nisv-item" refid="REFID" source="GMI"
+                      acl="Administrators:RWArwa,NISV_ADMINISTRATOR:RWArwa">
+                <gmi:ParentSiteId>PGMTOR0000000000</gmi:ParentSiteId>
+                <gmi:Fields>
+                    <gmi:Field name="asset.materialType">
+                        <gmi:Dictionary>video</gmi:Dictionary>
+                    </gmi:Field>
+                    <gmi:Field name="nisv.carriertypeid">
+                        <gmi:Dictionary>MP4</gmi:Dictionary>
+                    </gmi:Field>
+                    <gmi:Field name="nisv.formatid">
+                        <gmi:Dictionary>MPEG-4</gmi:Dictionary>
+                    </gmi:Field>
+                    <gmi:Field name="nisv.sourceid">
+                        <gmi:String>SOURCEID</gmi:String>
+                    </gmi:Field>
+                    <gmi:Field name="nisv.digitalborn">
+                        <gmi:Boolean>true</gmi:Boolean>
+                    </gmi:Field>
+                    <gmi:Field name="nisv.compression">
+                        <gmi:String>MPEG-4</gmi:String>
+                    </gmi:Field>
+                    <gmi:Field name="nisv.date">
+                        <gmi:DateTime>DATET00:00:00Z</gmi:DateTime>
+                    </gmi:Field>
+                    <gmi:Field name="asset.category">
+                        <gmi:Dictionary>Digital</gmi:Dictionary>
+                    </gmi:Field>
+                </gmi:Fields>
+                <gmi:GuciCreatorCode>MUS</gmi:GuciCreatorCode>
+                <gmi:GuciBasename>GMI_TEST</gmi:GuciBasename>
+                <gmi:Logtracks>
+                    <gmi:Logtrack refid="REFID" source="GMI">
+                        <gmi:Type>marker</gmi:Type>
+                        <gmi:Title>Technical</gmi:Title>
+                        <gmi:ColourCode>754113</gmi:ColourCode>
+                        <gmi:ClearExistingChildren>0</gmi:ClearExistingChildren>
+                        <gmi:LogtrackItems>
+                            <gmi:LogtrackItem form="nisv-positie" refid="REFID" source="GMI">
+                                <gmi:Fields>
+                                    <gmi:Field name="nisv.programid">
+                                        <gmi:String>PGMTOR0000000000</gmi:String>
+                                    </gmi:Field>
+                                    <gmi:Field name="nisv.dragersoort">
+                                        <gmi:Dictionary>Program</gmi:Dictionary>
+                                    </gmi:Field>
+                                </gmi:Fields>
+                                <gmi:FrameRate>25</gmi:FrameRate>
+                                <gmi:StartMs>0</gmi:StartMs>
+                                <gmi:DurationMs>6160</gmi:DurationMs>
+                            </gmi:LogtrackItem>
+                        </gmi:LogtrackItems>
+                    </gmi:Logtrack>
+                </gmi:Logtracks>
+                <gmi:ImportFiles>
+                    <gmi:File role="primary" filename="FILENAME" md5=""/>
+                </gmi:ImportFiles>
+            </gmi:Item>
+        </gmi:Items>
+    </gmi:Programme>
+</Package>

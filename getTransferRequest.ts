@@ -114,7 +114,7 @@ function getTransferRequest(js, xfr) {
 }
     
 function museumLogic(payload, mob_id) {
-    var mob, asset, asset_id, options, aux_data, metadata_obj, tape_group;
+    var mob, asset, asset_id, options, aux_data, metadata_obj, field, tape_group;
 
     options = payload.getOptions();
     if (typeof options === 'undefined') {
@@ -131,7 +131,7 @@ function museumLogic(payload, mob_id) {
     if (typeof aux_data === 'undefined') {
         alert ("Transfer Reroute: No aux data");
     } else {
-        alert ("Transfer Reroute: Got aux data" + aux_data.generateXML());
+        alert ("Transfer Reroute: Got aux data");
     }
 
     mob = getMOBById(mob_id);
@@ -147,9 +147,15 @@ function museumLogic(payload, mob_id) {
         return;
     }
 
-    if(metadata_obj) {
-        tape_group = metadata_obj.getField('nisv.tapegroup').getValue();
-        if(tape_group && tape_group == 'BG_MUS_TAPE') {
+    if (metadata_obj) {
+        alert("checking md");
+        field = metadata_obj.getField('nisv.tapegroup');
+        if (typeof field === 'undefined') {
+            alert("No field for tape group");
+            return;
+        }
+        tape_group = field.getValue();
+        if (tape_group && tape_group == 'BG_MUS_TAPE') {
             alert("Found item having museum tape group:" + asset_id);
         } else {
             alert("Item didn't have museum tape group: " + asset_id);

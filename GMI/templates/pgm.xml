@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vdf:payload xmlns:vdf="http://www.vizrt.com/types" xmlns:core="http://ns.vizrt.com/ardome/core" xmlns:vizmedia="http://www.vizrt.com/opensearch/mediatype" xmlns:vizid="http://www.vizrt.com/opensearch/vizid" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:app="http://www.w3.org/2007/app" xmlns:md="http://ns.vizrt.com/ardome/metadata" xmlns:playlist="http://ns.vizrt.com/ardome/playlist" xmlns:vaext="http://www.vizrt.com/atom-ext" xmlns:playout="http://ns.vizrt.com/ardome/playout" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:acl="http://www.vizrt.com/2012/acl" xmlns:at="http://purl.org/atompub/tombstones/1.0" xmlns:skos="http://www.w3.org/2004/02/skos/core" xmlns:mam="http://www.vizrt.com/2010/mam" xmlns:transfer="http://ns.vizrt.com/ardome/transfer" xmlns:storage="http://ns.vizrt.com/ardome/storage" xmlns:server="http://ns.vizrt.com/ardome/server" xmlns:accmethod="http://ns.vizrt.com/ardome/accessmethod" xmlns:e="http://ns.vizrt.com/ardome/exception" model="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/form/nisv-tv-radio-program/r1">
+   <vdf:field name="omp.showbrowse">
+      <vdf:value>false</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.title">
+      <vdf:value>biancakrijgsman_roddel_vraag_1_1</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.sourceid">
+      <vdf:value>2.05.3.M-440</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.sortdate"><vdf:value>2023-01-25</vdf:value></vdf:field>
+   <vdf:field name="nisv.tenant">
+      <vdf:value>tenant_Museum</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~nisv-tenants/tenant_Museum" id="urn:vme:default:dictionary:nisv-tenants:tenant_Museum"/>
+   </vdf:field>
+   <vdf:field name="nisv.seriestitle"/>
+   <vdf:field name="omp.taskstatus"/>
+   <vdf:field name="nisv.seasontitle"/>
+   <vdf:field name="nisv.makerorganisation"/>
+   <vdf:field name="nisv.pid"/>
+   <vdf:field name="nisv.materialtype">
+      <vdf:value>video</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~nisv-pgmmaterialtype/video" id="urn:vme:default:dictionary:nisv-pgmmaterialtype:video"/>
+   </vdf:field>
+   <vdf:field name="nisv.metadatastatus">
+      <vdf:value>approved</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~nisv-metadatastatus/approved" id="urn:vme:default:dictionary:nisv-metadatastatus:approved"/>
+   </vdf:field>
+   <vdf:field name="nisv.metadatastatushidden">
+      <vdf:value>approved</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~nisv-metadatastatus/approved" id="urn:vme:default:dictionary:nisv-metadatastatus:approved"/>
+   </vdf:field>
+   <vdf:field name="nisv.rightslicense">
+      <vdf:value>3</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~nisv-arlicense/3" id="urn:vme:default:dictionary:nisv-arlicense:3"/>
+   </vdf:field>
+   <vdf:field name="nisv.publishings">
+      <vdf:list>
+         <vdf:payload>
+            <vdf:field name="publishings.determinationdate">
+               <vdf:value>2023-01-25</vdf:value>
+            </vdf:field>
+            <vdf:field name="publishings.presentlyshared">
+               <vdf:value>true</vdf:value>
+            </vdf:field>
+            <vdf:field name="publishings.publishing">
+               <vdf:value>Museum</vdf:value>
+               <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~nisv-publishingpoints/Museum" id="urn:vme:default:dictionary:nisv-publishingpoints:Museum"/>
+            </vdf:field>
+         </vdf:payload>
+      </vdf:list>
+   </vdf:field>
+   <vdf:field name="nisv.recordinginformation">
+      <vdf:list>
+         <vdf:payload>
+            <vdf:field name="recordinginformation.editingdate">
+               <vdf:value>2023-01-25</vdf:value>
+            </vdf:field>
+         </vdf:payload>
+      </vdf:list>
+   </vdf:field>
+   <vdf:field name="nisv.sourcecatalogue">
+      <vdf:value>ContentProcessor</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~DIC27/ContentProcessor" id="urn:vme:default:dictionary:DIC27:ContentProcessor"/>
+   </vdf:field>
+   <vdf:field name="nisv.titletype">
+      <vdf:value>2860570</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~DIC11/2860570" id="urn:vme:default:dictionary:DIC11:2860570"/>
+   </vdf:field>
+</vdf:payload>

@@ -1,0 +1,35 @@
+            <gmi:Field name="nisv.metadatastatus">
+                <gmi:Dictionary>Approved</gmi:Dictionary>
+            </gmi:Field>
+            <gmi:Field name="nisv.title">
+                <gmi:String>TITLE</gmi:String>
+            </gmi:Field>
+            <gmi:Field name="nisv.titletype">
+                <gmi:Dictionary>titel</gmi:Dictionary>
+            </gmi:Field>
+            <gmi:Field name="nisv.publishings">
+                <gmi:Table>
+                    <gmi:TableRows>
+                        <gmi:TableRow>
+                            <gmi:Field name="publishings.publishing">
+                                <gmi:Dictionary>Museum</gmi:Dictionary>
+                            </gmi:Field>
+                            <gmi:Field name="publishings.presentlyshared">
+                                <gmi:Boolean>true</gmi:Boolean>
+                            </gmi:Field>
+                            <gmi:Field name="publishings.determinationdate">
+                                <gmi:DateTime>DATET00:00:00Z</gmi:DateTime>
+                            </gmi:Field>
+                        </gmi:TableRow>
+                    </gmi:TableRows>
+                </gmi:Table>
+            </gmi:Field>
+            <gmi:Field name="nisv.materialtype">
+                <gmi:Dictionary>video</gmi:Dictionary>
+            </gmi:Field>
+            <gmi:Field name="nisv.sourceid">
+                <gmi:String>SOURCEID</gmi:String>
+            </gmi:Field>
+            <gmi:Field name="nisv.tenant">
+                <gmi:Dictionary>Museum</gmi:Dictionary>
+            </gmi:Field>

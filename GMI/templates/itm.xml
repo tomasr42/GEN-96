@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vdf:payload xmlns:vdf="http://www.vizrt.com/types" xmlns:core="http://ns.vizrt.com/ardome/core" xmlns:vizmedia="http://www.vizrt.com/opensearch/mediatype" xmlns:vizid="http://www.vizrt.com/opensearch/vizid" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:app="http://www.w3.org/2007/app" xmlns:md="http://ns.vizrt.com/ardome/metadata" xmlns:playlist="http://ns.vizrt.com/ardome/playlist" xmlns:vaext="http://www.vizrt.com/atom-ext" xmlns:playout="http://ns.vizrt.com/ardome/playout" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:acl="http://www.vizrt.com/2012/acl" xmlns:at="http://purl.org/atompub/tombstones/1.0" xmlns:skos="http://www.w3.org/2004/02/skos/core" xmlns:mam="http://www.vizrt.com/2010/mam" xmlns:transfer="http://ns.vizrt.com/ardome/transfer" xmlns:storage="http://ns.vizrt.com/ardome/storage" xmlns:server="http://ns.vizrt.com/ardome/server" xmlns:accmethod="http://ns.vizrt.com/ardome/accessmethod" xmlns:e="http://ns.vizrt.com/ardome/exception" model="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/form/nisv-item/r2">
+   <vdf:field name="nisv.carriernumber">
+      <vdf:value>2_05_3_M_440_-MUS3000QX4U</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.formatid">
+      <vdf:value>710</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~LST4/710" id="urn:vme:default:dictionary:LST4:710"/>
+   </vdf:field>
+   <vdf:field name="nisv.playingtime"/>
+   <vdf:field name="nisv.sourceid">
+      <vdf:value>2.05.3.M-440</vdf:value>
+   </vdf:field>
+   <vdf:field name="asset.qcStatus">
+      <vdf:value>undecided</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~qcstatus/undecided" id="urn:vme:default:dictionary:qcstatus:undecided"/>
+   </vdf:field>
+   <vdf:field name="nisv.sortdate"><value xmlns="http://www.vizrt.com/types">2023-01-25</value></vdf:field>
+   <vdf:field name="nisv.soundrecordingid"/>
+   <vdf:field name="nisv.depotstateid"/>
+   <vdf:field name="nisv.resolution"/>
+   <vdf:field name="omp.status"/>
+   <vdf:field name="asset.category">
+      <vdf:value>dgtl</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~category/dgtl" id="urn:vme:default:dictionary:category:dgtl"/>
+   </vdf:field>
+   <vdf:field name="nisv.digitalborn">
+      <vdf:value>true</vdf:value>
+   </vdf:field>
+   <vdf:field name="omp.omppublish"/>
+   <vdf:field name="asset.materialType">
+      <vdf:value>229</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~materialtype/229" id="urn:vme:default:dictionary:materialtype:229"/>
+   </vdf:field>
+   <vdf:field name="nisv.carriertypeid">
+      <vdf:value>1419</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~LST18/1419" id="urn:vme:default:dictionary:LST18:1419"/>
+   </vdf:field>
+   <vdf:field name="nisv.checksum">
+      <vdf:value>cf2523ec509ad26113cbc89b6edc2158</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.aspectratio"/>
+   <vdf:field name="nisv.date">
+      <vdf:value>2023-01-25T10:49:03Z</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.seriestitle"/>
+   <vdf:field name="nisv.seasontitle"/>
+   <vdf:field name="nisv.programtitle"><value xmlns="http://www.vizrt.com/types">biancakrijgsman_roddel_vraag_1_1</value></vdf:field>
+   <vdf:field name="nisv.annotationcarriernumber">
+      <vdf:value>2. Informeren</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.carriernumbersource">
+      <vdf:value>M-440.mp4</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.compression">
+      <vdf:value>MPEG-4</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.createdby">
+      <vdf:value>ContentProcessor</vdf:value>
+   </vdf:field>
+   <vdf:field name="nisv.tapegroup">
+      <vdf:value>MUS</vdf:value>
+      <vdf:origin href="https://prd-vweb-bng-01.mam.beeldengeluid.nl/api/metadata/dictionary/~nisv-tapegroup/MUS" id="urn:vme:default:dictionary:nisv-tapegroup:MUS"/>
+   </vdf:field>
+</vdf:payload>

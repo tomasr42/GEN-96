@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://mayam.com/schemas/nisv/gmi/mdreq" xmlns:gmi="http://mayam.com/schemas/nisv/gmi" refid="REFID" source="GMI">
+    <gmi:Programme form="nisv-tv-radio-program" refid="REFID" source="GMI"
+                   acl="Administrators:RWArwa,NISV_ADMINISTRATOR:RWArwa,TENANT_NISV:RWArwa,PORTAL_GP:Rr,PORTAL_MP_NISV:Rr">
+        <gmi:AssetSiteId>PGMTOR0000000000</gmi:AssetSiteId>
+        <gmi:Fields>

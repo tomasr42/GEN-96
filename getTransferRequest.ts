@@ -1,6 +1,4 @@
 function getTransferRequest(js, xfr) {
-    
-    // This version adds a number of alerts to easily see where it might fail for debugging purposes
     // Load the transfer details into more descriptive variables 
     var payload = xfr.getPayload();
     alert ("Transfer Reroute: Got Payload" + payload.generateXML());
@@ -20,7 +18,9 @@ function getTransferRequest(js, xfr) {
     // alert ("Transfer Reroute: Got destination: " + destination + " and it is not null");
     if (!destination) { return xfr; }
     // alert ("Transfer Reroute: Destination is not null");
-    museumLogic(payload, source, mobID);
+    
+    /* This is the earliest point in time to call the museum logic  */
+    museumLogic(xfr);
 
     // Fetch the storage handle to check where the tranfer is going to
     // Using handle because it is safer to check compared to the ID
@@ -113,83 +113,170 @@ function getTransferRequest(js, xfr) {
     alert ("Wait, we're not supposed to be here,something went REALLY wrong");
 }
     
-function museumLogic(payload, source, mob_id) {
-    var min_id, min, mob, asset, asset_id, options, aux_data, metadata_obj, field, tape_group, storage, src_storage;
 
-    options = payload.getOptions();
+/**
+ * Updates the transfer request and prevents transcode for museum content 
+ * from "processed" sources. The idea is to try and fail the check as 
+ * soon as possible to avoid performance overhead for non-museum transfers.
+ *
+ * @param {TransferRequest} xfr The transfer request object.
+ * @return {TransferRequest} xfr The transfer request. 
+ */
+function museumLogic(xfr) {
+    var minId, min, auxData, match;
+    var payload = xfr.getPayload();
+    var source  = payload.getSource();
+    var options = payload.getOptions();
+    
+    // Step 1: An initial and cheap sanity check
     if (typeof options === 'undefined') {
         alert ("Transfer Reroute: No xfer options. This is unlikely an import. Skipping museum tenancy logic");
-        return;
-    } else {
-        alert ("Transfer Reroute: Got Options" + options.generateXML());
-        //alert ("Transfer Reroute:" + options.getTranscoderCluster());
-        //payload.setOptions(null);
-        //payload.setAuxData(null);
-    }
+        return xfr;
+    } 
     
-    aux_data = payload.getAuxData();
-    if (typeof aux_data === 'undefined') {
-        alert ("Transfer Reroute: No aux data");
-    } else {
-        alert ("Transfer Reroute: Got aux data");
-    }
-    
-    /* Verify that the source is really an import storage. Return if it's not */
-    /* It's necessary to fetch the MIN as an import request typically doesn't */
-    /* have a storage set */
-    min_id = source.getMin();
-    alert("got min:" + min_id);
-    if (!min_id) { return xfr; }
-    min = getMINById(min_id);
-    storage = min.getStorage();
-    if (!storage) { return; }
+    // Fetching the MIN from the source object. 
+    minId = source.getMin();
+    alert("got min:" + minId);
+    if (!minId) { return xfr; }
+    min = getMINById(minId);
 
-    src_storage = getStorageById(storage).getHandle();
-    if (!src_storage) { return; }
+    // Step 2: Check if we're importing.
+    if (!isSourceImport(min)) {
+        return xfr;
+    }
+    
+    // Step 3: Check if GUCI contains "MUS" for museum.
+    if (!checkGUCI(min)) {
+        return xfr;
+    }
+
+    // Step 4: Check if the museum media import is from a "processed" source. 
+    if (!isMuseumProcessedContent(min)) {
+        return xfr;
+    }
+
+    // Step 5: Reset the transfer options and aux data to avoid a transcode
+    alert("Transfer Reroute: Filename matched for Museum: " + match);
+    alert("Transfer Reroute: Got Options. We need to erase this: " + options.generateXML());
+    options = new TransferRequestOptions();
+    payload.setOptions(options);
+
+    auxData = payload.getAuxData();
+    if (typeof auxData !== 'undefined') {
+        alert ("Transfer Reroute: Got aux data. We need to erase this: " + auxData);
+        payload.setAuxData(encode_json('{}'));
+    }
+    return xfr;
+}
+
+/**
+ * Return true if the source media filename is containing the museum GUCI "MUS". 
+ *
+ * @param {MIN} min The source min object.
+ * @return {boolean} True GUCI matches MUS, else False. 
+ */
+function checkGUCI(min) {
+    var match, fileName;
+    var retval = false;
+    
+    /* CONSTANTS FOR MUSEUM */
+    var MUSEUM_GUCI_REGEX = "^[0-9A-Z_]+-MUS.*";
+    
+    fileName = min.getFileName();
+    if (!fileName) {
+        alert("Transfer Reroute: No filename on the MIN!");
+        return retval;
+    }
+    alert("Transfer Reroute: Identified source file name: " + fileName);
+    // fileExt = fileName.split('.').pop();
+    match = fileName.match(MUSEUM_GUCI_REGEX);
+    if (!match) { 
+        return retval; 
+    }
+    retval = true;
+    return retval;
+}
+
+/**
+ * Returns true if the source is from an import storage. 
+ * It's necessary to fetch the storage from the MIN as the 
+ * source object is unlikely to contain the storage for an import. 
+ *
+ * @param {MIN} min The source min object.
+ * @return {boolean} True if import, else False. 
+ */
+function isSourceImport(min) {
+    var storage, srcStorage;
+    var retval = false;
+    
+    /* CONSTANTS FOR MUSEUM */
+    var MAYAM_NORMAL_IMPORT_STORAGE = "mayam-normal-imp";
+    var MAYAM_PRIO_IMPORT_STORAGE   = "mayam-prio-imp";
+
+    storage = min.getStorage();
+    if (!storage) { 
+        return retval; 
+    }
+
+    srcStorage = getStorageById(storage).getHandle();
+    if (!srcStorage) { 
+        return retval; 
+    }
+    alert ("Transfer Reroute: Got storage: " + srcStorage);
 
     // Ugly, but they are the same on both prod and stage.
-    alert ("Transfer Reroute: Got storage: " + src_storage);
-    if (!(src_storage == "mayam-normal-imp" || src_storage == "mayam-prio-import")) { return; }
-    alert ("Transfer Reroute: Storage check matched - we are importing");
-
-    /* Next, verify that the source item has DIVA tape group = MUS. Return if not */
-    mob = getMOBById(mob_id);
-    asset_id = mob.getParentItem();
-    if (asset_id == null) {
-        return;
+    if (!(srcStorage == MAYAM_NORMAL_IMPORT_STORAGE || srcStorage == MAYAM_PRIO_IMPORT_STORAGE)) { 
+        return retval; 
     }
+    retval = true;
+    return retval;
+}
 
-    asset = getItemById(asset_id);
+/**
+ * Returns true if the asset associated with the transfer has 
+ * Created By set to "Content Creator"
+ *
+ * @param {MIN} min The source min object.
+ * @return {boolean} True if Content Creator, else False. 
+ */
+function isMuseumProcessedContent(min) {
+    var assetId, asset, metadataObj, field, createdBy;
+    var retval = false;
+
+    /* CONSTANTS FOR MUSEUM */
+    var MUSEUM_METADATA_FIELD       = "nisv.createdby";
+    var MUSEUM_CREATED_BY           = "ContentCreator";
+
+    assetId = min.getParentItem();
+    if (assetId == null) { 
+        return retval; 
+    }
+    asset = getItemById(assetId);
     try {
-        metadata_obj = getItemMetadataById(asset_id);
+        metadataObj = getItemMetadataById(assetId);
     } catch(e) {
         alert("Error calling the getItemMetadataById:" + e);
-        return;
+        return retval;
     }
-
-    if (!metadata_obj) { return; }
-    alert("Transfer Reroute: checking md for tapegroup = BG_MUS_TAPE");
-    /** WHY DOES IT BAIL HERE!!! */
-    field = metadata_obj.getField('nisv.tapegroup');
+    if (!metadataObj) { 
+        return retval; 
+    }
+    field = metadataObj.getField(MUSEUM_METADATA_FIELD);
     if (typeof field === 'undefined') {
-        alert("Transfer Reroute: No field for tape group for item: " + asset_id);
-        return;
+        alert("Transfer Reroute: No field for created by for item: " + assetId);
+        return retval;
     }
-    tape_group = field.getValue();
-    if (tape_group === 'undefined' || tape_group == '') { 
-        alert("Transfer Reroute: nisv.tapegroup note set for item: " + asset_id);
-        return; 
+    createdBy = field.getValue();
+    if (createdBy === 'undefined' || createdBy == '') { 
+        alert("Transfer Reroute: nisv.createdby not set for item: " + assetId);
+        return retval; 
     }
-
-    /* This is the last check. If this one passes, we need to get rid of the transcoding */
-    if (tape_group == 'BG_MUS_TAPE') {
-        alert("Transfer Reroute: Found item having museum tape group: " + tape_group);
-
-    } else {
-        alert("Transfer Reroute: Item didn't have museum tape group: " + tape_group);
+    if (createdBy != MUSEUM_CREATED_BY) {
+        alert("Transfer Reroute: Found item having 'Created By' set, just not to ContentProcessor: " + createdBy);
+        return retval;
     }
-
-    return payload;
+    retval = true;
+    return retval;
 }
 
 function shouldCalculateMd5Sum(js, xfr, item) {

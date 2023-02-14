@@ -1,6 +1,9 @@
 function test1(fileName) {
     console.log("Matching on: " + fileName);
-    let match = fileName.match(/^[0-9A-Z_]+-MUS.*/);
+    let regex = "^[0-9A-Z_]+-MUS.*";
+
+    //let match = fileName.match(/^[0-9A-Z_]+-MUS.*/);
+    let match = fileName.match(regex);
     if (match) {
         console.log("Match: " + match);
     } else {

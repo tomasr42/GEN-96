@@ -114,7 +114,7 @@ function getTransferRequest(js, xfr) {
 }
     
 function museumLogic(payload, source, mob_id) {
-    var mob, asset, asset_id, options, aux_data, metadata_obj, field, tape_group, storage, src_storage;
+    var min_id, min, mob, asset, asset_id, options, aux_data, metadata_obj, field, tape_group, storage, src_storage;
 
     options = payload.getOptions();
     if (typeof options === 'undefined') {
@@ -123,7 +123,6 @@ function museumLogic(payload, source, mob_id) {
     } else {
         alert ("Transfer Reroute: Got Options" + options.generateXML());
         //alert ("Transfer Reroute:" + options.getTranscoderCluster());
-        alert ("Transfer Reroute:" + options.transcoderCluster);
         //payload.setOptions(null);
         //payload.setAuxData(null);
     }
@@ -135,15 +134,23 @@ function museumLogic(payload, source, mob_id) {
         alert ("Transfer Reroute: Got aux data");
     }
     
-    /* Verify that the source is really an import storage. Return if not */
-    storage = source.getStorage();
+    /* Verify that the source is really an import storage. Return if it's not */
+    /* It's necessary to fetch the MIN as an import request typically doesn't */
+    /* have a storage set */
+    min_id = source.getMin();
+    alert("got min:" + min_id);
+    if (!min_id) { return xfr; }
+    min = getMINById(min_id);
+    storage = min.getStorage();
     if (!storage) { return; }
 
     src_storage = getStorageById(storage).getHandle();
     if (!src_storage) { return; }
 
     // Ugly, but they are the same on both prod and stage.
-    if (src_storage != "mayam-normal-imp" && src_storage != "mayam-prio-import") { return; }
+    alert ("Transfer Reroute: Got storage: " + src_storage);
+    if (!(src_storage == "mayam-normal-imp" || src_storage == "mayam-prio-import")) { return; }
+    alert ("Transfer Reroute: Storage check matched - we are importing");
 
     /* Next, verify that the source item has DIVA tape group = MUS. Return if not */
     mob = getMOBById(mob_id);
@@ -151,6 +158,7 @@ function museumLogic(payload, source, mob_id) {
     if (asset_id == null) {
         return;
     }
+
     asset = getItemById(asset_id);
     try {
         metadata_obj = getItemMetadataById(asset_id);
@@ -159,22 +167,28 @@ function museumLogic(payload, source, mob_id) {
         return;
     }
 
-    if (metadata_obj) {
-        alert("checking md");
-        field = metadata_obj.getField('nisv.tapegroup');
-        if (typeof field === 'undefined') {
-            alert("No field for tape group");
-            return;
-        }
-        tape_group = field.getValue();
-        if (tape_group && tape_group == 'BG_MUS_TAPE') {
-            alert("Found item having museum tape group:" + asset_id);
-        } else {
-            alert("Item didn't have museum tape group: " + asset_id);
-        }
-    } else {
-        alert("Item didn't have metadata, ignoring: " + asset_id);
+    if (!metadata_obj) { return; }
+    alert("Transfer Reroute: checking md for tapegroup = BG_MUS_TAPE");
+    /** WHY DOES IT BAIL HERE!!! */
+    field = metadata_obj.getField('nisv.tapegroup');
+    if (typeof field === 'undefined') {
+        alert("Transfer Reroute: No field for tape group for item: " + asset_id);
+        return;
     }
+    tape_group = field.getValue();
+    if (tape_group === 'undefined' || tape_group == '') { 
+        alert("Transfer Reroute: nisv.tapegroup note set for item: " + asset_id);
+        return; 
+    }
+
+    /* This is the last check. If this one passes, we need to get rid of the transcoding */
+    if (tape_group == 'BG_MUS_TAPE') {
+        alert("Transfer Reroute: Found item having museum tape group: " + tape_group);
+
+    } else {
+        alert("Transfer Reroute: Item didn't have museum tape group: " + tape_group);
+    }
+
     return payload;
 }
 

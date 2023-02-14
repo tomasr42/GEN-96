@@ -11,6 +11,11 @@ fi
 # Do NOT use numbers. Only uppercase letters please, or it'll break further down.
 BASENAME="MUS"
 
+# GuciBasename (affects filenames), is extended once the SEQ is calculated
+GUCIBASEPFX="3.01.3.0"
+GUCIFILEPFX="3-01-3-0"
+
+
 # Toggle to "1" if you wish to auto-scp the files which is mandatory if you are using 
 # multiple lines in the manifest file
 AUTO_SCP=1
@@ -73,6 +78,10 @@ do
     fi
 
     TITLE="${BASENAME}${SEQ}${TAG}"
+    GUCIBASE="${GUCIBASEPFX}${SEQ}"
+    GUCIFILE="${GUCIFILEPFX}${SEQ}"
+
+    FILENAME="0${SEQ}"
     GMI_XML="${GMI_DIR}/${TITLE}.xml"
     cat "${TEMPLATE_DIR}/${PGM}" >> $GMI_XML
     cat "${TEMPLATE_DIR}/${PGM_MD}" >> $GMI_XML
@@ -80,13 +89,15 @@ do
     perl -pi -e "s/PGMTOR0000000000/PGM${TITLE}/" $GMI_XML
     perl -pi -e "s/TITLE/${TITLE}/" $GMI_XML
     perl -pi -e "s/REFID/${TITLE}/" $GMI_XML
-    perl -pi -e "s/SOURCEID/${TITLE}/" $GMI_XML
-    perl -pi -e "s/FILENAME/${TITLE}.mp4/" $GMI_XML
+    perl -pi -e "s/SOURCEID/${GUCIBASE}/" $GMI_XML
+    perl -pi -e "s/CARRIERSOURCE/${FILENAME}.mp4/" $GMI_XML
+    perl -pi -e "s/BASENAME/${GUCIBASE}/" $GMI_XML
+    perl -pi -e "s/FILENAME/${FILENAME}.mp4/" $GMI_XML
     perl -pi -e "s/GMI_TEST/${TITLE}/" $GMI_XML
     perl -pi -e "s/DATE/$DATE/" $GMI_XML
 
     ### xfer step. Transfers the gmi/*.xml files and the .mxf file to match the GMI_XML filename
-    TARGET_MEDIA_FILENAME="${TITLE}.mp4"
+    TARGET_MEDIA_FILENAME="${FILENAME}.mp4"
 
 ### Note: You need to toggle AUTO_SCP (above) to "1" if you're using multiple lines 
 # in the manifest file, or the GMI XML file will be deleted before you have a chance to send it. 

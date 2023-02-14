@@ -35,7 +35,7 @@
                         <gmi:Dictionary>Digital</gmi:Dictionary>
                     </gmi:Field>
                     <gmi:Field name="nisv.tapegroup">
-                        <gmi:Dictionary>MUS</gmi:Dictionary>
+                        <gmi:Dictionary>BG_MUS_TAPE</gmi:Dictionary>
                     </gmi:Field>
                 </gmi:Fields>
                 <gmi:GuciCreatorCode>MUS</gmi:GuciCreatorCode>

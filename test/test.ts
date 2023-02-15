@@ -21,3 +21,32 @@ test1(fileName1);
 test1(fileName2);
 test1(fileName3);
 test1(fileName4);
+
+// JSON stuff
+
+let json = '{"data":{"sourceMOB":"2102302150262067707","destinationStoragePurpose":"HIGHRES","removeHoldTime":"300","destinationZone":"northholland","owner":"DAEMON+autoimportd","transcoderProfile":"coder","transcoderCluster":"import","sourceMIN":"2102302150712400208","postImportRemoveSource":true,"description":"Transcoding MUS021TOR 3_01_3_0021__-MUS3000KGZB"},"apitype":"TRANSFER.BrowseRequest","version":1}';
+let aux = JSON.parse(json);
+/*
+let text = "";
+for (const x in obj) {
+  text += obj[x] + ", ";
+}
+*/
+if (aux.data.transcoderProfile != undefined) {
+    console.log("target folder from xfer request = " + aux.data.transcoderProfile);
+    delete aux.data.transcoderProfile;
+}
+if (aux.data.transcoderCluster != undefined) {
+    console.log("target folder from xfer request = " + aux.data.transcoderProfile);
+    delete aux.data.transcoderCluster;
+}
+if (aux.data.description != undefined) {
+    if (aux.data.description.match(/^Transcoding/)) {
+        aux.data.description = aux.data.description.replace(/^Transcoding/, "Central transfer for");
+    }
+}
+if (aux.apitype != undefined && aux.apitype == "TRANSFER.BrowseRequest") {
+    aux.apitype = "TRANSFER.SimpleRequest";
+}
+
+console.log(JSON.stringify(aux));

@@ -49,4 +49,10 @@ if (aux.apitype != undefined && aux.apitype == "TRANSFER.BrowseRequest") {
     aux.apitype = "TRANSFER.SimpleRequest";
 }
 
+for (var prop in aux) {
+    console.log(prop + ': ' + aux[prop]);
+}
+//= aux.getOwnPropertyNames();
+console.log(typeof aux);
+
 console.log(JSON.stringify(aux));

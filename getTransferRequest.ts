@@ -1,7 +1,7 @@
 function getTransferRequest(js, xfr) {
     // Load the transfer details into more descriptive variables 
     var payload = xfr.getPayload();
-    alert ("Transfer Reroute: Got Payload" + payload.generateXML());
+    //alert ("Transfer Reroute: Got Payload" + payload.generateXML());
     if (!payload) { return xfr; }
     // alert ("Transfer Reroute: Payload is not null");
 
@@ -123,7 +123,7 @@ function getTransferRequest(js, xfr) {
  * @return {TransferRequest} xfr The transfer request. 
  */
 function museumLogic(xfr) {
-    var minId, min, auxData, match;
+    var minId, min;
     var payload = xfr.getPayload();
     var source  = payload.getSource();
     var options = payload.getOptions();
@@ -156,17 +156,157 @@ function museumLogic(xfr) {
     }
 
     // Step 5: Reset the transfer options and aux data to avoid a transcode
-    alert("Transfer Reroute: Filename matched for Museum: " + match);
-    alert("Transfer Reroute: Got Options. We need to erase this: " + options.generateXML());
-    options = new TransferRequestOptions();
-    payload.setOptions(options);
-
-    auxData = payload.getAuxData();
-    if (typeof auxData !== 'undefined') {
-        alert ("Transfer Reroute: Got aux data. We need to erase this: " + auxData);
-        payload.setAuxData(encode_json('{}'));
-    }
+    museumRewriteOptions(payload);
     return xfr;
+}
+
+/**
+ * Rewrites the transfer options paylod and aux data to skip transcoding. The payload is 
+ * completely recreated. This is necessary because there's no code to manipulate this entry
+ * <transcoder:cluster>import</transcoder:cluster> in the options payload.
+ *
+ * @param {TransferRequestOptions} min The source min object.
+ * @return {TransferRequestPayload} The updated payload.
+ */
+function museumRewriteOptions(payload) {
+    var options, auxData, method, format, offset, length, removeSource, removeHoldTime; 
+    var maxAttempts, retryDelay, preProcessMethod, postProcessMethod, transcoderProfile;
+    var newOptions, aux;
+    
+    options = payload.getOptions();
+    // Redundant, but just to make sure
+    if (typeof options === 'undefined') {
+        return payload;
+    }
+    
+    alert("Transfer Reroute: Got Options. Checking if it contains transcoding " + options.generateXML());
+    transcoderProfile = options.getTranscoderProfile();
+    if (typeof transcoderProfile === 'undefined') {
+        // We're expecting a transcode profile as it's an import. It's weird if we're not getting one. 
+        return payload;
+    } else {
+        alert("Trying to delete transcoderProfile");
+        delete options.transcoderProfile;
+    }
+
+    if (typeof options.transcoderCluster !==  'undefined') {
+        alert("Trying to delete transcoderCluster");
+        delete options.transcoderCluster;
+    }
+    /*
+    newOptions = new TransferRequestOptions();
+
+    method = options.getMethod();
+    format = options.getFormat();
+    offset = options.getOffset();
+    length = options.getLength();
+    removeSource   = options.getRemoveSource();
+    removeHoldTime = options.getRemoveHoldTime();
+    maxAttempts    = options.getMaxAttempts();
+    retryDelay     = options.getRetryDelay();
+    preProcessMethod  = options.getPreProcessMethod();
+    postProcessMethod = options.getPostProcessMethod();
+    
+    if (typeof method !== 'undefined') { newOptions.setMethod(method); }
+    if (typeof format !== 'undefined') { newOptions.setFormat(format); }
+    if (typeof offset !== 'undefined') { newOptions.setOffset(offset); }
+    if (typeof length !== 'undefined') { newOptions.setlength(length); }
+    if (typeof removeSource   !== 'undefined') { newOptions.setRemoveSource(removeSource); }
+    if (typeof removeHoldTime !== 'undefined') { newOptions.setRemoveHoldTime(removeHoldTime); }
+    if (typeof maxAttempts    !== 'undefined') { newOptions.setMaxAttempts(maxAttempts); }
+    if (typeof retryDelay     !== 'undefined') { newOptions.setRetryDelay(retryDelay); }
+    if (typeof preProcessMethod  !== 'undefined') { newOptions.setPreProcessMethod(preProcessMethod); }
+    if (typeof postProcessMethod !== 'undefined') { newOptions.setPostProcessMethod(postProcessMethod); }
+    
+    alert("Transfer Reroute: Modified options w/o transcoding " + newOptions.generateXML());
+    payload.setOptions(newOptions);
+    */
+    alert("Transfer Reroute: Modified options w/o transcoding " + options.generateXML());
+    payload.setOptions(options);
+    auxData = payload.getAuxData();
+    if (typeof auxData === 'undefined') {
+        // We're expecting a transcode profile as it's an import. It's weird if we're not getting one. 
+        return payload;
+    }
+    
+    /* Expected input: 
+    * {
+    *   "data":
+    *     {
+    *         "sourceMOB":"2102302150262067707",
+    *         "destinationStoragePurpose":"HIGHRES",
+    *         "removeHoldTime":"300",
+    *         "destinationZone":"northholland",
+    *         "owner":"DAEMON+autoimportd",
+    *         "transcoderProfile":"coder",
+    *         "transcoderCluster":"import",
+    *         "sourceMIN":"2102302150712400208",
+    *         "postImportRemoveSource":true,
+    *         "description":"Transcoding MUS021TOR 3_01_3_0021__-MUS3000KGZB"
+    *     },
+    *   "apitype":"TRANSFER.BrowseRequest",
+    *   "version":1
+    * } */
+    alert ("Transfer Reroute: Got aux data. We need to tweak it: " + auxData);
+    /*for (var prop in auxData) {
+        alert('auxData: ' + prop + ': ' + auxData[prop]);
+    }*/
+    try {
+        aux = decode_json(auxData);
+    } catch(e) {
+        alert("Error decoding json" + e);
+    }
+    if (typeof aux !== 'undefined') {
+        alert('what is aux after decode_json?' + typeof aux);
+        alert("aux lives");
+        //alert("what is aux?: " + aux.apitype);
+    } else {
+        alert("aux is dead");
+    }
+    
+    alert('options is?' + typeof options);
+    alert('options has removeHoldTime?: ' + options.removeHoldTime);
+    
+    var payloadJSON = payload.generateJSONC();
+    alert('payloadJSON is?' + typeof payloadJSON);
+    alert('payloadJSON: ' + payloadJSON);
+    var payloadDecoded = decode_json(payloadJSON);
+
+    if (typeof payloadDecoded !== 'undefined') {
+        alert('what is payloadDecoded after decode_json?' + typeof payloadDecoded);
+        alert("payloadDecoded lives");
+        alert("what is payloadDecoded?: " + payloadDecoded.data.options.removeHoldTime)
+    } else {
+        alert("payloadDecoded is dead");
+    }
+
+
+    if (typeof aux === 'undefined') {
+        alert("Transfer Reroute: aux data isn't what we expected, so erasing all of it");
+        payload.setAuxData(encode_json('{}'));
+        return payload;
+    }
+    if (typeof aux.data.transcoderProfile !== 'undefined') {
+        alert("Transfer Reroute: removing transcoder profile from request: " + aux.data.transcoderProfile);
+        delete aux.data.transcoderProfile;
+    }
+    if (typeof aux.data.transcoderCluster !== 'undefined') {
+        alert("Transfer Reroute: removing transcoder cluster from request = " + aux.data.transcoderCluster);
+        delete aux.data.transcoderCluster;
+    }
+    if (typeof aux.data.description !== 'undefined') {
+        if (aux.data.description.match(/^Transcoding/)) {
+            aux.data.description = aux.data.description.replace(/^Transcoding/, "Central transfer for");
+        }
+    }
+    if (typeof aux.apitype !== 'undefined' && aux.apitype == "TRANSFER.BrowseRequest") {
+        aux.apitype = "TRANSFER.SimpleRequest";
+    } 
+    auxData = encode_json(aux);
+    alert("Transfer Reroute: Aux data after museum modification: " + auxData);
+
+    payload.setAuxData(auxData);
+    return payload;
 }
 
 /**
@@ -193,6 +333,7 @@ function checkGUCI(min) {
     if (!match) { 
         return retval; 
     }
+    alert("Transfer Reroute: Filename matched GUCI for Museum");
     retval = true;
     return retval;
 }
@@ -245,7 +386,7 @@ function isMuseumProcessedContent(min) {
 
     /* CONSTANTS FOR MUSEUM */
     var MUSEUM_METADATA_FIELD       = "nisv.createdby";
-    var MUSEUM_CREATED_BY           = "ContentCreator";
+    var MUSEUM_CREATED_BY           = "ContentProcessor";
 
     assetId = min.getParentItem();
     if (assetId == null) { 
@@ -316,4 +457,3 @@ function shouldCalculateMd5Sum(js, xfr, item) {
 function getConversionTranscoderProfile(js, xfr, criteria_profiles, all_profiles) {
     return null;
 }
-

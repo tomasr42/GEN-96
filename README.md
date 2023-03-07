@@ -9,9 +9,23 @@ Development is in VS Code.
 compile using ``tsc getTransferRequest.ts``
 
 # OVERVIEW OF FILES
-getTransferRequest.js
-getTransferRequest.ts
-Makefile
+```
+getTransferRequest.js <== The file deployed on the Viz One. Never change this manually!
+getTransferRequest.ts <== This is the main source code. Compile it into getTransferRequest.js
+GMI/ <== For testing. Helps transferring GMI files 
++-- gmi/
++-- media
+|   +-- manifest.dat
+|   `-- README.txt
++-- result
++-- run-gmi.sh
+`-- templates
+|   +-- 01-PGM.xml
+|   +-- 02-ITM.xml
+|   `-- program-md.xml
+test/
+`-- test.ts <== for testing without having to deploy to the Viz One
+```
 
 # DEPLOYING
 See the related repo "playbooks" and ``ansible-playbook -i inventory/inv_st deploy-getTransferRequest.yml --ask-pass``

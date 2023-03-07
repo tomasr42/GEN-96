@@ -105,12 +105,12 @@ do
 if [ "$AUTO_SCP" -eq "1" ]
 then
     echo "transferring \"${MEDIA_DIR}/${SRC_FILE}\" -> ${TARGET_MEDIA_FILENAME}"
-    scp $GMI_XML armedia@${WFE_SERVER}:/import/mayam/incoming/general/
-    scp "${MEDIA_DIR}/${SRC_FILE}" armedia@${WFE_SERVER}:/import/mayam/incoming/general/${TARGET_MEDIA_FILENAME}
+    rsync -av $GMI_XML armedia@${WFE_SERVER}:/import/mayam/incoming/general/
+    rsync -av "${MEDIA_DIR}/${SRC_FILE}" armedia@${WFE_SERVER}:/import/mayam/incoming/general/${TARGET_MEDIA_FILENAME}
 else
     cp $GMI_XML ${GMI_XML}.bak
-    echo "scp $GMI_XML armedia@${WFE_SERVER}:/import/mayam/incoming/general/"
-    echo "scp \"${MEDIA_DIR}/${SRC_FILE}\" armedia@${WFE_SERVER}:/import/mayam/incoming/general/${TARGET_MEDIA_FILENAME}"
+    echo "rsync -av $GMI_XML armedia@${WFE_SERVER}:/import/mayam/incoming/general/"
+    echo "rsync -av \"${MEDIA_DIR}/${SRC_FILE}\" armedia@${WFE_SERVER}:/import/mayam/incoming/general/${TARGET_MEDIA_FILENAME}"
 fi
 
 done < ${MANIFEST_FILE} 

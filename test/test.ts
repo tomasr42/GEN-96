@@ -56,3 +56,22 @@ for (var prop in aux) {
 console.log(typeof aux);
 
 console.log(JSON.stringify(aux));
+
+console.log("-------------");
+
+var regex = "^TENANT_*";
+var root = ["NISV_ADMINISTRATORS", "EXT"];
+var groups = ["ADSF", "NISV_ADMINISTRATORS", "TENANT_NISV", "TENANT_asdf"];
+
+
+for(var i = 0; i < groups.length; i++) {
+       var group = groups[i];
+       for( var j in root ) {
+           if (group == root[j]) {
+               console.log("Add group to ACLs: " + group);
+           }
+       }
+       if (group.match(regex)) {
+               console.log("Add group to ACLs: " + group);
+       }
+}

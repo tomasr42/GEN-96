@@ -41,7 +41,7 @@
                 <gmi:GuciCreatorCode>MUS</gmi:GuciCreatorCode>
                 <gmi:GuciBasename>BASENAME</gmi:GuciBasename>
                 <gmi:ImportFiles>
-                    <gmi:File role="primary" filename="FILENAME" md5=""/>
+                    <gmi:File role="primary" filename="FILENAME"/>
                 </gmi:ImportFiles>
             </gmi:Item>
         </gmi:Items>
